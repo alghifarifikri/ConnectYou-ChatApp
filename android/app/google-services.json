@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "986468040416",
+    "firebase_url": "https://connectyou-6add0.firebaseio.com",
+    "project_id": "connectyou-6add0",
+    "storage_bucket": "connectyou-6add0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:986468040416:android:5a1a4c48cb4a9537bc9a85",
+        "android_client_info": {
+          "package_name": "com.connectyou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "986468040416-dn34uvfeq661g74n9tsmql9l6mphn3ub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJOLXE4RC7Dl4ppGBuzqGB6f80_Ekz-5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "986468040416-dn34uvfeq661g74n9tsmql9l6mphn3ub.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
