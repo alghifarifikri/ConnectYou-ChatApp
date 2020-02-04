@@ -182,8 +182,8 @@ android {
 
 dependencies {
 
-    implementation project(":react-native-firebase")
-    
+    implementation project(":react-native-firebase")     
+    // implementation project(':react-native-fcm')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     
@@ -196,6 +196,7 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:17.0.0"
     implementation "com.google.firebase:firebase-database:17.0.0"
     implementation "com.google.firebase:firebase-storage:17.0.0"
+    implementation "com.google.firebase:firebase-messaging:18.0.0"
 
     implementation "com.android.support:multidex:1.0.3"
 

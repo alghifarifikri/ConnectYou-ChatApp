@@ -34,12 +34,14 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#F4CF5D',
     marginTop: 5,
+    marginBottom: 5,
     marginRight: 10,
     marginLeft: 10,
     alignItems: 'center',
     height: 40,
     justifyContent: 'center',
     borderRadius: 10,
+    width: 100,
   },
 });
 
@@ -71,7 +73,6 @@ class Profiles extends Component {
     imageUri: null,
     imgSource: '',
     uploading: false,
-    refreshing: false,
   };
 
   componentDidMount = async () => {
@@ -90,12 +91,20 @@ class Profiles extends Component {
         .ref('user/' + userid)
         .update({status: 'Offline'});
       await AsyncStorage.clear();
-      firebase
-        .auth()
-        .signOut()
-        .then(() => this.props.navigation.navigate('Login'));
-      Alert.alert('See you next time');
+      firebase.auth().signOut();
+      Alert.alert(
+        'Succes!',
+        'See you next time ...',
+        [
+          {
+            text: 'OK',
+            onPress: () => this.props.navigation.push('Login'),
+          },
+        ],
+        {cancelable: false},
+      );
     });
+    // .then(() => this.props.navigation.navigate('Login'));
   };
 
   requestCameraPermission = async () => {
@@ -113,7 +122,6 @@ class Profiles extends Component {
   };
 
   changeImage = async type => {
-    // console.log(upp)
     const Blob = RNFetchBlob.polyfill.Blob;
     window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
     window.Blob = Blob;
@@ -146,6 +154,7 @@ class Profiles extends Component {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
+          this.setState({loading: true});
           ToastAndroid.show('loading...', ToastAndroid.LONG);
           const imageRef = firebase
             .storage()
@@ -159,7 +168,7 @@ class Profiles extends Component {
                 .database()
                 .ref('user/' + this.state.userId)
                 .update({photo: data.downloadURL});
-              this.setState({userAvatar: data.downloadURL});
+              this.setState({userAvatar: data.downloadURL, loading: false});
               AsyncStorage.setItem('user.photo', this.state.userAvatar);
             })
 
@@ -170,20 +179,25 @@ class Profiles extends Component {
   };
 
   render() {
-    const {currentUser} = this.state;
     return (
       <View style={styles.root}>
         <Headers />
-        <View style={{height: '40%'}}>
-          <TouchableOpacity onPress={this.changeImage}>
-            <Thumbnail
-              style={styles.image}
-              source={{
-                uri: this.state.userAvatar,
-              }}
-            />
-          </TouchableOpacity>
-        </View>
+        {this.state.loading === false ? (
+          <View style={{height: '40%'}}>
+            <TouchableOpacity onPress={this.changeImage}>
+              <Thumbnail
+                style={styles.image}
+                source={{
+                  uri: this.state.userAvatar,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={{height: '35%', marginTop: 30}}>
+            <ActivityIndicator size="large" color="#fff" />
+          </View>
+        )}
         <Card
           style={{
             marginLeft: 10,
@@ -207,7 +221,8 @@ class Profiles extends Component {
             <Label style={{marginTop: 10, fontSize: 13}}>Email</Label>
             <Input
               keyboardType="email-address"
-              value={currentUser && currentUser.email}
+              // value={currentUser && currentUser.email}
+              value={this.state.userEmail}
               disabled
             />
           </Item>
@@ -218,11 +233,23 @@ class Profiles extends Component {
             <Input value="089695780942" disabled />
           </Item>
         </Card>
-        <TouchableOpacity onPress={this.signOutUser}>
-          <View style={styles.button}>
-            <Text style={{fontWeight: 'bold'}}>Log Out</Text>
-          </View>
-        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}>
+          <TouchableOpacity onPress={this.signOutUser}>
+            <View style={styles.button}>
+              <Text style={{fontWeight: 'bold'}}>Log Out</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('EditProfile')}>
+            <View style={styles.button}>
+              <Text style={{fontWeight: 'bold'}}>Edit</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

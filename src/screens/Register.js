@@ -11,6 +11,7 @@ import {
   Platform,
   PermissionsAndroid,
   ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import {Card, Item} from 'native-base';
 import {withNavigation} from 'react-navigation';
@@ -19,13 +20,23 @@ import Geolocation from 'react-native-geolocation-service';
 
 const styles = StyleSheet.create({
   image: {
-    width: '55%',
+    width: '60%',
     height: '85%',
     justifyContent: 'center',
     alignSelf: 'center',
   },
   button: {
     backgroundColor: '#0DBEDF',
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    alignItems: 'center',
+    height: 40,
+    justifyContent: 'center',
+    borderRadius: 10,
+  },
+  buttonLoading: {
+    backgroundColor: 'grey',
     marginTop: 10,
     marginRight: 10,
     marginLeft: 10,
@@ -97,7 +108,7 @@ class Registers extends Component {
       return;
     }
 
-    this.setState({loading: true}, () => {
+    this.setState(() => {
       Geolocation.getCurrentPosition(
         position => {
           this.setState({
@@ -137,6 +148,7 @@ class Registers extends Component {
         ToastAndroid.LONG,
       );
     } else {
+      this.setState({loading: true});
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
@@ -175,6 +187,7 @@ class Registers extends Component {
             name: '',
             email: '',
             password: '',
+            loading: false,
           });
           ToastAndroid.show(this.state.errorMessage.message, ToastAndroid.LONG);
         });
@@ -233,11 +246,17 @@ class Registers extends Component {
             />
           </Item>
         </Card>
-        <TouchableOpacity onPress={this.registerButtonPress}>
-          <View style={styles.button}>
-            <Text style={{fontWeight: 'bold'}}>Register</Text>
+        {this.state.loading === false ? (
+          <TouchableOpacity onPress={this.registerButtonPress}>
+            <View style={styles.button}>
+              <Text style={{fontWeight: 'bold'}}>Register</Text>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.buttonLoading}>
+            <ActivityIndicator size="large" color="#fff" />
           </View>
-        </TouchableOpacity>
+        )}
       </View>
     );
   }

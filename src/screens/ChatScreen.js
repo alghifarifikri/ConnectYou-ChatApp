@@ -159,16 +159,20 @@ class ChatScreens extends Component {
             <FlatList
               data={this.state.userList}
               renderItem={({item}) => (
-                <TouchableOpacity
-                  onPress={() =>
-                    this.props.navigation.navigate('ChatRoom', {item})
-                  }
-                  onLongPress={() =>
-                    this.props.navigation.navigate('FriendProfile', {item})
-                  }>
-                  <Item>
-                    <View style={styles.row}>
+                <Item>
+                  <View style={styles.row}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.props.navigation.navigate('FriendProfile', {
+                          item,
+                        })
+                      }>
                       <Image source={{uri: item.photo}} style={styles.pic} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.props.navigation.navigate('ChatRoom', {item})
+                      }>
                       <View>
                         <View style={styles.nameContainer}>
                           <Text
@@ -189,9 +193,9 @@ class ChatScreens extends Component {
                           <Text style={styles.email}>{item.email}</Text>
                         </View>
                       </View>
-                    </View>
-                  </Item>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                  </View>
+                </Item>
               )}
               keyExtractor={item => item.id}
             />

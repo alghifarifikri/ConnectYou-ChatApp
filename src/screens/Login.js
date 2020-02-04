@@ -11,6 +11,7 @@ import {
   PermissionsAndroid,
   ToastAndroid,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {Card, Item} from 'native-base';
 import {withNavigation} from 'react-navigation';
@@ -21,13 +22,23 @@ import firebase from 'react-native-firebase';
 
 const styles = StyleSheet.create({
   image: {
-    width: '55%',
+    width: '60%',
     height: '85%',
     justifyContent: 'center',
     alignSelf: 'center',
   },
   button: {
     backgroundColor: '#0DBEDF',
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    alignItems: 'center',
+    height: 40,
+    justifyContent: 'center',
+    borderRadius: 10,
+  },
+  buttonLoading: {
+    backgroundColor: 'grey',
     marginTop: 10,
     marginRight: 10,
     marginLeft: 10,
@@ -58,6 +69,7 @@ class Logins extends Component {
       email: '',
       password: '',
       errorMesasge: null,
+      refreshing: false,
     };
   }
   // state = {email: '', password: '', errorMessage: null};
@@ -117,7 +129,7 @@ class Logins extends Component {
       return;
     }
 
-    this.setState({loading: true}, () => {
+    this.setState(() => {
       Geolocation.getCurrentPosition(
         position => {
           this.setState({
@@ -158,7 +170,6 @@ class Logins extends Component {
       );
     } else {
       firebase
-        // .auth()
         .database()
         .ref('user/')
         .orderByChild('/email')
@@ -172,6 +183,7 @@ class Logins extends Component {
             AsyncStorage.setItem('user.photo', user[0].photo);
           }
         });
+      this.setState({refreshing: true});
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
@@ -184,6 +196,7 @@ class Logins extends Component {
               latitude: this.state.latitude || null,
               longitude: this.state.longitude || null,
             });
+
           await AsyncStorage.setItem('userid', response.user.uid);
           ToastAndroid.show('Login success', ToastAndroid.LONG);
           await this.props.navigation.navigate('ChatScreen');
@@ -193,6 +206,7 @@ class Logins extends Component {
             errorMessage: error.message,
             email: '',
             password: '',
+            refreshing: false,
           });
           ToastAndroid.show(this.state.errorMessage, ToastAndroid.LONG);
         });
@@ -243,11 +257,17 @@ class Logins extends Component {
             />
           </Item>
         </Card>
-        <TouchableOpacity onPress={this.loginPress}>
-          <View style={styles.button}>
-            <Text style={{fontWeight: 'bold'}}>Login</Text>
+        {this.state.refreshing === false ? (
+          <TouchableOpacity onPress={this.loginPress}>
+            <View style={styles.button}>
+              <Text style={{fontWeight: 'bold'}}>Login</Text>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.buttonLoading}>
+            <ActivityIndicator size="large" color="#fff" />
           </View>
-        </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={() => this.props.navigation.navigate('Register')}>
           <View style={styles.buttonRegister}>

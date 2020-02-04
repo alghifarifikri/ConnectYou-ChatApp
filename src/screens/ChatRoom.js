@@ -137,7 +137,7 @@ export default class ChatRoom extends Component {
           </View>
         </View>
         <Container>
-          <View style={{backgroundColor: '#0DBEDF', flex: 1}}>
+          <View style={{backgroundColor: '#F6F5F1', flex: 1}}>
             <GiftedChat
               renderSend={this.renderSend}
               renderBubble={this.renderBubble}
