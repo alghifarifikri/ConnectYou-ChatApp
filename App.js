@@ -183,14 +183,14 @@ const BottomNav = createBottomTabNavigator(
         },
       },
     },
-    Contact: {
-      screen: ContactNav,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => {
-          return <Icon name="contacts" size={25} color={tintColor} />;
-        },
-      },
-    },
+//     Contact: {
+//       screen: ContactNav,
+//       navigationOptions: {
+//         tabBarIcon: ({tintColor}) => {
+//           return <Icon name="contacts" size={25} color={tintColor} />;
+//         },
+//       },
+//     },
     Profile: {
       screen: ProfileNav,
       navigationOptions: {
